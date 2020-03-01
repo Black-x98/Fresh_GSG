@@ -8,83 +8,9 @@ import g_var
 from Tkinter import *
 import random
 
-#********************************************************************************************
-
-
-class spec_guard(entities):
-
-    spec_guard_move_counter = 0
-
-
-    def __init__(self,_canvas,_root, _agent_pos, _drone_pos, _cell_resources, _target_pos):
-        self.spec_guard_color = "blue"
-        self.canvas = _canvas
-        self.root = _root
-        self.agent_pos = _agent_pos
-        self.drone_pos = _drone_pos
-        self.cell_resources = _cell_resources
-        self.target_pos = _target_pos
-        self.my_target = _target_pos[random.randint(0,len(_target_pos)-1)]
-        print "my target : " + str(self.my_target)
-        self.flag = 0
-
-        self.sack = 0
-        self.sack_limit = 10
-        self.spec_guard_counter = 0
-        temp = self.target_pos[random.randint(0,len(self.target_pos)-1)]
-        self.cur_x_spec_guard = temp[1]
-        self.cur_y_spec_guard = temp[0]
-
-        x_cor = self.cur_x_spec_guard * g_var.block_size
-        y_cor = self.cur_y_spec_guard * g_var.block_size
-        print "Initiated poacher at position: " + self.cur_y_spec_guard.__str__() + "," + self.cur_x_spec_guard.__str__()
-
-    def move_spec_guard(self):
-        print "inside move_spec**************"
-        x_cor = self.cur_x_spec_guard * g_var.block_size
-        y_cor = self.cur_y_spec_guard * g_var.block_size
-        self.canvas.create_polygon(x_cor+15,y_cor+20,x_cor+15,y_cor+35,x_cor+30,y_cor+35,x_cor+30,y_cor+20,fill=g_var.bg_color,outline=g_var.bg_color)
-        self.agent_pos[self.cur_x_spec_guard][self.cur_y_spec_guard] = 0
-
-        offset_y = self.my_target[0] - self.cur_y_spec_guard
-        offset_x = self.my_target[1] - self.cur_x_spec_guard
-
-        if offset_x==0 and offset_y==0:
-            temp = self.target_pos[random.randint(0,len(self.target_pos)-1)]
-            self.my_target= temp
-            #self.my_target[0] = temp[0]
-        move_x = 0
-        move_y = 0
-        if offset_x>0:
-            move_x = 1
-        elif offset_x<0:
-            move_x = -1
-        if offset_y>0:
-            move_y = 1
-        elif offset_y<0:
-            move_y = -1
-
-        self.cur_x_spec_guard = self.cur_x_spec_guard + move_x
-        self.cur_y_spec_guard = self.cur_y_spec_guard + move_y
-        x_cor = self.cur_x_spec_guard * g_var.block_size
-        y_cor = self.cur_y_spec_guard * g_var.block_size
-
-        self.canvas.create_polygon(x_cor+15,y_cor+20,x_cor+15,y_cor+35,x_cor+30,y_cor+35,x_cor+30,y_cor+20,fill=self.spec_guard_color)
-        self.agent_pos[self.cur_x_spec_guard][self.cur_y_spec_guard] = 1
-
-        self.spec_guard_counter += 1
-        if move_x != 0 or move_y != 0:
-            g_var.distance_travelled += 1
-
-        if self.spec_guard_counter < g_var.movement_limit:
-            self.root.after(g_var.turn_gap_time, self.move_spec_guard)
-
-
-
-
-
 
 #**************************************************************************************************
+
 class app(Frame):
 
     global  arrested_poachers, resource_poached, resource_recovered, distance_travelled, turn_gap_time
@@ -121,16 +47,16 @@ class app(Frame):
                                [0,50,0,0,50,0,50,0,0,0],
                                [0,0,0,0,-1,-1,-1,0,0,0],
                                [0,50,0,-1,50,50,50,-1,0,0],
-                               [0,0,0,-1,50,0,0,-1,50,0],
+                               [0,0,0,13,50,0,0,-1,50,0],
                                [0,0,0,-1,50,50,50,-1,0,0],
                                [0,0,0,0,-1,-1,-1,-1,0,0],
                                [0,0,50,0,0,0,50,0,0,0],
-                               [0,0,0,50,0,0,0,0,0,0],
+                               [0,0,0,50,0,0,0,50,0,0],
                                [0,0,0,0,0,0,0,0,0,0]]
 
         for i in range(g_var.dimension):
             for j in range(g_var.dimension):
-                if self.cell_resources[i][j] == 50:
+                if self.cell_resources[i][j] > 0:
                     self.target_pos.append((i,j))
                 if self.cell_resources[i][j] == -1:
                     self.round_marking.append((i,j))
@@ -171,19 +97,15 @@ class app(Frame):
             for j in range(g_var.dimension + 1):
                 self.canvas.create_rectangle(i*g_var.block_size,j*g_var.block_size,g_var.block_size,g_var.block_size,outline="grey")
 
-        for i in range(0):
-            agent_obj = agent(self.canvas,self.root,self.agent_pos,self.cell_resources,self.round_marking)
-            agent_obj.move_agent()
+        for i in range(g_var.num_of_agents):
+            agent_obj = agent(self.canvas,self.root,self.agent_pos,self.cell_resources,self.target_pos,self.round_marking)
+            agent_obj.move_spec_guard()
 
-        for i in range(5):
-            spec_guard_obj = spec_guard(self.canvas,self.root,self.agent_pos,self.cell_resources,self.round_marking,self.target_pos)
-            spec_guard_obj.move_spec_guard()
-        '''
         for i in range(g_var.num_of_drones):
             drone_obj = drone(self.canvas,self.root,self.drone_pos)
-            drone_obj.move_drone()'''
+            drone_obj.move_drone()
 
-        for i in range(10):
+        for i in range(g_var.num_of_adverseries):
             adv_obj = adv(self.canvas,self.root,self.agent_pos,self.drone_pos,self.cell_resources,self.target_pos)
             adv_obj.operate_adv()
 

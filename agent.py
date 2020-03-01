@@ -10,26 +10,15 @@ class agent(entities):
     agent_color = "green"
 
 
-    def __init__(self,_canvas,_root,_agent_pos,_cell_resources,_round_marking):
+    def __init__(self,_canvas,_root,_agent_pos,_cell_resources,_target_pos,_round_marking):
         self.canvas = _canvas
         self.root = _root
         self.agent_pos = _agent_pos
         self.cell_resource = _cell_resources
-        self.round_marking =_round_marking
         self.agent_id = random.randint(0,1000)
-        '''inner_circle = g_var.dimension/3 #instead of 4
-        outer_circle = g_var.dimension/2 #instead of 8
-        while True:
-            self.cur_x_agent = random.randint(inner_circle,outer_circle)
-            if self.cur_x_agent == inner_circle:
-                self.cur_y_agent = random.randint(inner_circle,outer_circle)
-            elif self.cur_x_agent == outer_circle:
-                self.cur_y_agent = random.randint(inner_circle,outer_circle)
-            else:
-                set = {inner_circle,outer_circle}
-                self.cur_y_agent = random.sample(set,1)[0]
-            if self.agent_pos[self.cur_x_agent][self.cur_y_agent]==0:
-                break'''
+        self.target_pos = _target_pos
+        self.round_marking = _round_marking
+
         while True:
             pair = self.round_marking[random.randint(0,len(self.round_marking)-1)]
             self.cur_x_agent= pair[1]
@@ -42,8 +31,14 @@ class agent(entities):
         self.prev2_y = -1
         self.prev2_x = -1
 
+
+        self.my_target = _target_pos[random.randint(0,len(_target_pos)-1)]
+        print "my target : " + str(self.my_target)
+
         x_cor = self.cur_x_agent * g_var.block_size
         y_cor = self.cur_y_agent * g_var.block_size
+        self.agent_pos[self.cur_x_agent][self.cur_y_agent] = 1
+        self.canvas.create_polygon(x_cor+15,y_cor+20,x_cor+15,y_cor+35,x_cor+30,y_cor+35,x_cor+30,y_cor+20,fill=self.agent_color)
 
 
         print "Placed an agent at the position: " + self.cur_x_agent.__str__() + " mmmm " + self.cur_y_agent.__str__()
@@ -105,6 +100,47 @@ class agent(entities):
 
         if self.agent_counter < g_var.movement_limit:
             self.root.after(g_var.turn_gap_time, self.check_resource)
+            
+    def move_spec_guard(self):
+        #print "inside move_spec**************"
+        x_cor = self.cur_x_agent * g_var.block_size
+        y_cor = self.cur_y_agent * g_var.block_size
+        self.canvas.create_polygon(x_cor+15,y_cor+20,x_cor+15,y_cor+35,x_cor+30,y_cor+35,x_cor+30,y_cor+20,fill=g_var.bg_color,outline=g_var.bg_color)
+        self.agent_pos[self.cur_x_agent][self.cur_y_agent] = 0
+
+        offset_y = self.my_target[0] - self.cur_y_agent
+        offset_x = self.my_target[1] - self.cur_x_agent
+
+        if offset_x==0 and offset_y==0:
+            temp = self.target_pos[random.randint(0,len(self.target_pos)-1)]
+            self.my_target= temp
+            print "New target of spec guard at " + str(self.my_target[0]) + "," + str(self.my_target[1])
+            #self.my_target[0] = temp[0]
+        move_x = 0
+        move_y = 0
+        if offset_x>0:
+            move_x = 1
+        elif offset_x<0:
+            move_x = -1
+        if offset_y>0:
+            move_y = 1
+        elif offset_y<0:
+            move_y = -1
+
+        self.cur_x_agent = self.cur_x_agent + move_x
+        self.cur_y_agent = self.cur_y_agent + move_y
+        x_cor = self.cur_x_agent * g_var.block_size
+        y_cor = self.cur_y_agent * g_var.block_size
+
+        self.canvas.create_polygon(x_cor+15,y_cor+20,x_cor+15,y_cor+35,x_cor+30,y_cor+35,x_cor+30,y_cor+20,fill=self.agent_color)
+        self.agent_pos[self.cur_x_agent][self.cur_y_agent] = 1
+
+        self.agent_counter += 1
+        if move_x != 0 or move_y != 0:
+            g_var.distance_travelled += 1
+
+        if self.agent_counter < g_var.movement_limit:
+            self.root.after(g_var.turn_gap_time, self.move_spec_guard)
 
     def agent_go_round(self):
 
