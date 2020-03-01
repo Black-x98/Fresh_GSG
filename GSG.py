@@ -45,11 +45,11 @@ class app(Frame):
         self.round_marking = []
         self.cell_resources =  [[0,0,0,0,0,0,0,0,0,0],
                                [0,50,0,0,50,0,50,0,0,0],
-                               [0,0,0,0,-1,-1,-1,0,0,0],
-                               [0,50,0,-1,50,50,50,-1,0,0],
-                               [0,0,0,13,50,0,0,-1,50,0],
-                               [0,0,0,-1,50,50,50,-1,0,0],
-                               [0,0,0,0,-1,-1,-1,-1,0,0],
+                               [0,0,0,0,24,23,36,17,0,0],
+                               [0,50,0,10,50,50,50,6,0,0],
+                               [0,0,0,13,50,0,0,10,50,0],
+                               [0,0,0,10,50,50,50,10,0,0],
+                               [0,0,0,0,10,10,10,10,0,0],
                                [0,0,50,0,0,0,50,0,0,0],
                                [0,0,0,50,0,0,0,50,0,0],
                                [0,0,0,0,0,0,0,0,0,0]]
@@ -60,7 +60,7 @@ class app(Frame):
                     self.target_pos.append((i,j))
                 if self.cell_resources[i][j] == -1:
                     self.round_marking.append((i,j))
-
+        self.round_marking.append((5,5)) # temporary dummy
         print "so, round marking is: "
         print self.round_marking
         print len(self.round_marking)
