@@ -7,10 +7,10 @@ class agent(entities):
     agent_counter = 0
     #agent_color = "#5566ff"
     colors = ["orange", "yellow", "green", "blue", "violet"]
-    agent_color = "green"
+    agent_color = "violet"
 
 
-    def __init__(self,_canvas,_root,_agent_pos,_cell_resources,_target_pos,_round_marking):
+    def __init__(self,_canvas,_root,_agent_pos,_cell_resources,_target_pos,_round_marking,_drone_signal):
         self.canvas = _canvas
         self.root = _root
         self.agent_pos = _agent_pos
@@ -18,6 +18,7 @@ class agent(entities):
         self.agent_id = random.randint(0,1000)
         self.target_pos = _target_pos
         self.round_marking = _round_marking
+        self.drone_signal = _drone_signal
 
         while True:
             pair = self.round_marking[random.randint(0,len(self.round_marking)-1)]
@@ -103,6 +104,17 @@ class agent(entities):
             
     def move_spec_guard(self):
         #print "inside move_spec**************"
+        #print " checking for drone signal nearby "
+        for i in range(3):
+            for j in range(3):
+                temp_y = self.cur_y_agent-1+i
+                temp_x = self.cur_x_agent-1+j
+                if temp_y>=0 and temp_y<=g_var.dimension-1 and temp_x>=0 and temp_x<=g_var.dimension-1:
+                    if self.drone_signal[temp_y][temp_x] == 1:
+                        self.my_target = (temp_y,temp_x)
+                        print "AGENT DETECTED A DRONE SIGNAL!!!"
+                        print "Heading to " + str(self.my_target)
+                        break
         x_cor = self.cur_x_agent * g_var.block_size
         y_cor = self.cur_y_agent * g_var.block_size
         self.canvas.create_polygon(x_cor+15,y_cor+20,x_cor+15,y_cor+35,x_cor+30,y_cor+35,x_cor+30,y_cor+20,fill=g_var.bg_color,outline=g_var.bg_color)

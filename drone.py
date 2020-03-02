@@ -7,10 +7,12 @@ class drone(entities):
     drone_counter = 0
     drone_color = "#ffff66"
 
-    def __init__(self,_canvas,_root, _drone_pos):
+    def __init__(self,_canvas,_root, _drone_pos, _drone_signal, _adv_pos):
         self.canvas = _canvas
         self.root = _root
         self.drone_pos = _drone_pos
+        self.drone_signal = _drone_signal
+        self.adv_pos = _adv_pos
         self.cur_x_drone = random.randint(0,g_var.dimension-2)
         self.cur_y_drone = random.randint(0,g_var.dimension-2)
 
@@ -25,6 +27,7 @@ class drone(entities):
         y_cor = self.cur_y_drone * g_var.block_size
         self.drone_pos[self.cur_x_drone][self.cur_y_drone] = 0
         self.canvas.create_oval(x_cor+22,y_cor+10,x_cor+37,y_cor+25,fill=g_var.bg_color,outline=g_var.bg_color)
+        self.drone_signal[self.cur_y_drone][self.cur_x_drone] = 0 # erasing the signal, if any that is!!!
 
         lower_limit_x = -1
         lower_limit_y = -1
@@ -47,6 +50,9 @@ class drone(entities):
         y_cor = self.cur_y_drone * g_var.block_size
         self.drone_pos[self.cur_x_drone][self.cur_y_drone] = 1 # Marking Drone Position
         self.canvas.create_oval(x_cor+22,y_cor+10,x_cor+37,y_cor+25,fill=self.drone_color,outline=g_var.bg_color)
+        if self.adv_pos[self.cur_y_drone][self.cur_x_drone] == 1:
+            self.drone_signal[self.cur_y_drone][self.cur_x_drone] = 1
+            print "Drone sending signal!!! BEEP BEEP BEEP!! at " + self.cur_y_drone.__str__() + "," + self.cur_x_drone.__str__()
 
         self.drone_counter += 1
 

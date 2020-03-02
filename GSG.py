@@ -40,7 +40,9 @@ class app(Frame):
 
         self.agent_pos = [[0 for i in range(g_var.dimension)] for j in range(g_var.dimension)]
         #self.cell_resources = [[random.randint(10,50) for i in range(global_var.dimension)] for j in range(global_var.dimension)]
+        self.adv_pos = [[0 for i in range(g_var.dimension)] for j in range(g_var.dimension)]
         self.drone_pos = [[0 for i in range(g_var.dimension)] for j in range(g_var.dimension)]
+        self.drone_signal = [[0 for i in range(g_var.dimension)] for j in range(g_var.dimension)]
         self.target_pos = []
         self.round_marking = []
         self.cell_resources =  [[4,9,6,7,0,2,1,6,7,0],
@@ -70,19 +72,21 @@ class app(Frame):
 
         self.label_poacher_num = Label(self.root,text = "Number of Total \nPoachers:\n" + str(g_var.num_of_adverseries))
         self.label_poacher_num.place(relx=0.78, rely=0.15)
-        self.label_agent_num = Label(self.root,text = "Number of Agents:\n" + str(g_var.num_of_agents))
-        self.label_agent_num.place(relx=0.78, rely=0.3)
-        self.label_drone_num = Label(self.root,text = "Number of Drones:\n" + str(g_var.num_of_drones))
-        self.label_drone_num.place(relx=0.78, rely=0.4)
 
         self.label_arrest = Label(self.root,text = g_var.arrested_poachers)
-        self.label_arrest.place(relx=0.78, rely=0.5)
+        self.label_arrest.place(relx=0.78, rely=0.3)
         self.label_sack = Label(self.root,text = g_var.resource_poached)
-        self.label_sack.place(relx=0.78, rely=0.6)
+        self.label_sack.place(relx=0.78, rely=0.4)
         self.label_recovered = Label(self.root,text = g_var.resource_poached)
-        self.label_recovered.place(relx=0.78, rely=0.7)
+        self.label_recovered.place(relx=0.78, rely=0.5)
         self.label_travelled = Label(self.root,text = g_var.distance_travelled)
-        self.label_travelled.place(relx=0.78, rely=0.8)
+        self.label_travelled.place(relx=0.78, rely=0.6)
+
+        self.label_agent_num = Label(self.root,text = "Number of Agents:\n" + str(g_var.num_of_agents))
+        self.label_agent_num.place(relx=0.78, rely=0.7)
+        self.label_drone_num = Label(self.root,text = "Number of Drones:\n" + str(g_var.num_of_drones))
+        self.label_drone_num.place(relx=0.78, rely=0.8)
+
 
         self.refresh()
         self.canvas.create_rectangle(0, 0, g_var.dimension * g_var.block_size, g_var.dimension * g_var.block_size, fill=g_var.bg_color)
@@ -98,15 +102,15 @@ class app(Frame):
                 self.canvas.create_rectangle(i*g_var.block_size,j*g_var.block_size,g_var.block_size,g_var.block_size,outline="grey")
 
         for i in range(g_var.num_of_agents):
-            agent_obj = agent(self.canvas,self.root,self.agent_pos,self.cell_resources,self.target_pos,self.round_marking)
+            agent_obj = agent(self.canvas,self.root,self.agent_pos,self.cell_resources,self.target_pos,self.round_marking,self.drone_signal)
             agent_obj.move_spec_guard()
 
         for i in range(g_var.num_of_drones):
-            drone_obj = drone(self.canvas,self.root,self.drone_pos)
+            drone_obj = drone(self.canvas,self.root,self.drone_pos,self.drone_signal,self.adv_pos)
             drone_obj.move_drone()
 
         for i in range(g_var.num_of_adverseries):
-            adv_obj = adv(self.canvas,self.root,self.agent_pos,self.drone_pos,self.cell_resources,self.target_pos)
+            adv_obj = adv(self.canvas,self.root,self.agent_pos,self.drone_pos,self.cell_resources,self.target_pos,self.adv_pos)
             adv_obj.operate_adv()
 
         self.root.mainloop()

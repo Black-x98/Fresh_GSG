@@ -7,13 +7,15 @@ class adv(entities):
     adv_move_counter = 0
     adv_color = "red"
 
-    def __init__(self,_canvas,_root, _agent_pos, _drone_pos, _cell_resources, _target_pos):
+    def __init__(self,_canvas,_root, _agent_pos, _drone_pos, _cell_resources, _target_pos, _adv_pos):
 
+        self.adv_color="red"
         self.canvas = _canvas
         self.root = _root
         self.agent_pos = _agent_pos
         self.drone_pos = _drone_pos
         self.cell_resources = _cell_resources
+        self.adv_pos = _adv_pos
         self.target_pos = _target_pos
         self.my_target = _target_pos[random.randint(0,len(_target_pos)-1)]
         print "my target : " + str(self.my_target)
@@ -22,7 +24,7 @@ class adv(entities):
         self.escape_y = 0
         # flag values mean different mode of drones
         self.sack = 0
-        self.sack_limit = 10
+        self.sack_limit = 30
 
         set = {0, g_var.dimension - 1}
         if random.randint(0,1)==0:
@@ -36,11 +38,13 @@ class adv(entities):
         y_cor = self.cur_y_adv * g_var.block_size
         self.canvas.create_polygon(x_cor+15,y_cor+38,x_cor+35,y_cor+38,x_cor+25,y_cor+19,fill=self.adv_color)
         print "Initiated poacher at position: " + self.cur_y_adv.__str__() + "," + self.cur_x_adv.__str__()
+        self.adv_pos[self.cur_y_adv][self.cur_x_adv] = 1
 
     def move_adv(self):
         x_cor = self.cur_x_adv * g_var.block_size
         y_cor = self.cur_y_adv * g_var.block_size
         self.canvas.create_polygon(x_cor+15,y_cor+38,x_cor+35,y_cor+38,x_cor+25,y_cor+19,fill=g_var.bg_color,outline=g_var.bg_color)
+        self.adv_pos[self.cur_y_adv][self.cur_x_adv] = 0
 
         x_offset = self.my_target[1] - self.cur_x_adv
         y_offset = self.my_target[0] - self.cur_y_adv
@@ -59,6 +63,11 @@ class adv(entities):
 
         if self.cur_x_adv>g_var.dimension-1 or self.cur_y_adv>g_var.dimension-1: # invalid move check!!!
             print "AFTER: The cur_x_adv and cur_y_adv is: " + self.cur_x_adv.__str__() + " and " + self.cur_y_adv.__str__()
+
+        x_cor = self.cur_x_adv * g_var.block_size
+        y_cor = self.cur_y_adv * g_var.block_size
+        self.canvas.create_polygon(x_cor+15,y_cor+38,x_cor+35,y_cor+38,x_cor+25,y_cor+19,fill=self.adv_color,outline=g_var.bg_color)
+        self.adv_pos[self.cur_y_adv][self.cur_x_adv] = 1
 
     def poach(self):
         if self.drone_pos[self.cur_x_adv][self.cur_y_adv] == 1:
@@ -81,7 +90,7 @@ class adv(entities):
 
     def fix_escape_point(self):
         up_end = self.cur_y_adv
-        down_end = g_var.dimension - 1 - self.cur_y_adv
+        down_end = g_var.dimension -1 - self.cur_y_adv
         right_end = g_var.dimension - 1 - self.cur_x_adv
         left_end = self.cur_x_adv
         self.escape_x = 0
@@ -114,6 +123,7 @@ class adv(entities):
         x_cor = self.cur_x_adv * g_var.block_size
         y_cor = self.cur_y_adv * g_var.block_size
         self.canvas.create_polygon(x_cor+15,y_cor+38,x_cor+35,y_cor+38,x_cor+25,y_cor+19,fill=g_var.bg_color,outline=g_var.bg_color)
+        self.adv_pos[self.cur_y_adv][self.cur_x_adv] = 0
 
         x_offset = self.escape_x - self.cur_x_adv
         y_offset = self.escape_y - self.cur_y_adv
@@ -144,7 +154,7 @@ class adv(entities):
     def operate_adv(self):
         #print "Operating ehh?"
         self.adv_move_counter += 1
-        if self.flag == 0 or self.flag == 5:
+        if self.flag == 0:
             self.move_adv()
         if self.flag == 1:
             self.poach()
