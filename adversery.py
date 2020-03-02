@@ -20,9 +20,7 @@ class adv(entities):
         self.flag = 0
         self.escape_x = 0
         self.escape_y = 0
-        # 0 means target destination hasn't been reached
-        # 1 means target reached and poaching is going on
-        # 2 means poching done now leaving area
+        # flag values mean different mode of drones
         self.sack = 0
         self.sack_limit = 10
 
@@ -65,12 +63,19 @@ class adv(entities):
     def poach(self):
         if self.drone_pos[self.cur_x_adv][self.cur_y_adv] == 1:
             print "Oh no! Drone!!!"
-            self.flag = 3
+            self.my_target = self.target_pos[random.randint(0,len(self.target_pos)-1)]
+            print "my target : " + str(self.my_target)
+            self.flag = 0
             
         if self.sack < self.sack_limit and self.cell_resources[self.cur_y_adv][self.cur_x_adv]>0:  # resource value update
             self.sack += 1
             g_var.resource_poached += 1
             self.cell_resources[self.cur_y_adv][self.cur_x_adv] -= 1
+        if self.cell_resources[self.cur_y_adv][self.cur_x_adv] <= 0:
+            print "This cell has been sucked empty!!!"
+            self.my_target = self.target_pos[random.randint(0,len(self.target_pos)-1)]
+            print " my target : " + str(self.my_target)
+            self.flag = 0
         if self.sack >= self.sack_limit:
             self.flag = 2
 

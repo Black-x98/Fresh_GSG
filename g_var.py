@@ -13,5 +13,5 @@ resource_recovered = 0
 distance_travelled = 0
 num_of_adverseries = 10
 num_of_agents = 5
-num_of_drones = 6
+num_of_drones = 0
 num_of_targets = 16

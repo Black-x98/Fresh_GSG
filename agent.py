@@ -21,8 +21,8 @@ class agent(entities):
 
         while True:
             pair = self.round_marking[random.randint(0,len(self.round_marking)-1)]
-            self.cur_x_agent= pair[1]
-            self.cur_y_agent= pair[0]
+            self.cur_x_agent = pair[1]
+            self.cur_y_agent = pair[0]
             if self.agent_pos[self.cur_x_agent][self.cur_y_agent]==0:
                 break
         self.agent_pos[self.cur_x_agent][self.cur_y_agent] = 1
@@ -114,8 +114,8 @@ class agent(entities):
         if offset_x==0 and offset_y==0:
             temp = self.target_pos[random.randint(0,len(self.target_pos)-1)]
             self.my_target= temp
-            print "New target of spec guard at " + str(self.my_target[0]) + "," + str(self.my_target[1])
-            #self.my_target[0] = temp[0]
+            #print "New target of spec guard at " + str(self.my_target[0]) + "," + str(self.my_target[1])
+
         move_x = 0
         move_y = 0
         if offset_x>0:
