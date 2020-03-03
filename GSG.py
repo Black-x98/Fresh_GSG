@@ -33,7 +33,7 @@ class app(Frame):
 
         self.root = Tk()
         self.root.title("Green Security Game")
-        self.root.geometry('640x480+220+120')
+        self.root.geometry('640x480+620+120')
         self.canvas = Canvas(self.root,bg="#333333",height=480,width=640)
         self.canvas.pack()
         Frame.__init__(self)

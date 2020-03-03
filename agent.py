@@ -113,7 +113,7 @@ class agent(entities):
                     if self.drone_signal[temp_y][temp_x] == 1:
                         self.my_target = (temp_y,temp_x)
                         print "AGENT DETECTED A DRONE SIGNAL!!!"
-                        print "Heading to " + str(self.my_target)
+                        print "Heading to " + str(self.my_target) + " from " + str(self.cur_y_agent) + "," + str(self.cur_x_agent)
                         break
         x_cor = self.cur_x_agent * g_var.block_size
         y_cor = self.cur_y_agent * g_var.block_size

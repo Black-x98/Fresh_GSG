@@ -24,7 +24,7 @@ class adv(entities):
         self.escape_y = 0
         # flag values mean different mode of drones
         self.sack = 0
-        self.sack_limit = 30
+        self.sack_limit = 10
 
         set = {0, g_var.dimension - 1}
         if random.randint(0,1)==0:
@@ -140,6 +140,11 @@ class adv(entities):
         self.cur_x_adv += move_x
         self.cur_y_adv += move_y
 
+        x_cor = self.cur_x_adv * g_var.block_size
+        y_cor = self.cur_y_adv * g_var.block_size
+        self.canvas.create_polygon(x_cor+15,y_cor+38,x_cor+35,y_cor+38,x_cor+25,y_cor+19,fill=self.adv_color,outline=g_var.bg_color)
+        self.adv_pos[self.cur_y_adv][self.cur_x_adv] = 0
+
         if self.cur_x_adv>g_var.dimension-1 or self.cur_y_adv>g_var.dimension-1: # invalid move check!!!
             print "AFTER: The cur_x_adv and cur_y_adv is: " + self.cur_x_adv.__str__() + " and " + self.cur_y_adv.__str__()
 
@@ -149,6 +154,7 @@ class adv(entities):
         y_cor = self.cur_y_adv * g_var.block_size
         self.canvas.create_polygon(x_cor+15,y_cor+38,x_cor+35,y_cor+38,x_cor+25,y_cor+19,fill=g_var.bg_color,outline="yellow")
         self.flag = 6
+        print "The poacher JUST ESCAPED!!!***************"
 
 
     def operate_adv(self):
@@ -169,7 +175,7 @@ class adv(entities):
             del self
 
         elif self.agent_pos[self.cur_x_adv][self.cur_y_adv] == 1: # The End sir!!!
-
+            self.adv_pos[self.cur_y_adv][self.cur_x_adv] = 0
             x_cor = self.cur_x_adv * g_var.block_size
             y_cor = self.cur_y_adv * g_var.block_size
             self.canvas.create_polygon(x_cor+15,y_cor+10,x_cor+15,y_cor+25,x_cor+30,y_cor+25,x_cor+30,y_cor+10,fill="white")
