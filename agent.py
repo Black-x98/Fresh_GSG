@@ -5,9 +5,7 @@ import g_var
 class agent(entities):
 
     agent_counter = 0
-    #agent_color = "#5566ff"
-    colors = ["orange", "yellow", "green", "blue", "violet"]
-    agent_color = "violet"
+    agent_color = "green"
 
 
     def __init__(self,_canvas,_root,_agent_pos,_cell_resources,_target_pos,_round_marking,_drone_signal):
@@ -15,7 +13,6 @@ class agent(entities):
         self.root = _root
         self.agent_pos = _agent_pos
         self.cell_resource = _cell_resources
-        self.agent_id = random.randint(0,1000)
         self.target_pos = _target_pos
         self.round_marking = _round_marking
         self.drone_signal = _drone_signal
@@ -34,15 +31,14 @@ class agent(entities):
 
 
         self.my_target = _target_pos[random.randint(0,len(_target_pos)-1)]
-        print "my target : " + str(self.my_target)
+        ##print "my target : " + str(self.my_target)
 
         x_cor = self.cur_x_agent * g_var.block_size
         y_cor = self.cur_y_agent * g_var.block_size
         self.agent_pos[self.cur_x_agent][self.cur_y_agent] = 1
         self.canvas.create_polygon(x_cor+15,y_cor+20,x_cor+15,y_cor+35,x_cor+30,y_cor+35,x_cor+30,y_cor+20,fill=self.agent_color)
 
-
-        print "Placed an agent at the position: " + self.cur_x_agent.__str__() + " mmmm " + self.cur_y_agent.__str__()
+        ##print "Placed an agent at the position: " + self.cur_x_agent.__str__() + " mmmm " + self.cur_y_agent.__str__()
 
     def move_agent(self):
 
@@ -89,7 +85,7 @@ class agent(entities):
         self.agent_pos[self.cur_x_agent][self.cur_y_agent] = 0
 
 
-        #print "Agent " + self.agent_id.__str__() + " moved to " + self.cur_x_agent.__str__() + "," + self.cur_y_agent.__str__()
+        ##print "Agent " + self.agent_id.__str__() + " moved to " + self.cur_x_agent.__str__() + "," + self.cur_y_agent.__str__()
         x_cor = self.cur_x_agent * g_var.block_size
         y_cor = self.cur_y_agent * g_var.block_size
         self.canvas.create_polygon(x_cor+15,y_cor+20,x_cor+15,y_cor+35,x_cor+30,y_cor+35,x_cor+30,y_cor+20,fill=self.agent_color)
@@ -103,8 +99,8 @@ class agent(entities):
             self.root.after(g_var.turn_gap_time, self.check_resource)
             
     def move_spec_guard(self):
-        #print "inside move_spec**************"
-        #print " checking for drone signal nearby "
+        ##print "inside move_spec**************"
+        ##print " checking for drone signal nearby "
         for i in range(3):
             for j in range(3):
                 temp_y = self.cur_y_agent-1+i
@@ -112,8 +108,8 @@ class agent(entities):
                 if temp_y>=0 and temp_y<=g_var.dimension-1 and temp_x>=0 and temp_x<=g_var.dimension-1:
                     if self.drone_signal[temp_y][temp_x] == 1:
                         self.my_target = (temp_y,temp_x)
-                        print "AGENT DETECTED A DRONE SIGNAL!!!"
-                        print "Heading to " + str(self.my_target) + " from " + str(self.cur_y_agent) + "," + str(self.cur_x_agent)
+                        #print "AGENT DETECTED A DRONE SIGNAL!!!"
+                        ##print "Agent heading to " + str(self.my_target) + " from " + str(self.cur_y_agent) + "," + str(self.cur_x_agent)
                         break
         x_cor = self.cur_x_agent * g_var.block_size
         y_cor = self.cur_y_agent * g_var.block_size
@@ -126,7 +122,7 @@ class agent(entities):
         if offset_x==0 and offset_y==0:
             temp = self.target_pos[random.randint(0,len(self.target_pos)-1)]
             self.my_target= temp
-            #print "New target of spec guard at " + str(self.my_target[0]) + "," + str(self.my_target[1])
+            ##print "New target of spec guard at " + str(self.my_target[0]) + "," + str(self.my_target[1])
 
         move_x = 0
         move_y = 0
@@ -185,7 +181,7 @@ class agent(entities):
                     break
             if got_it:
                 break
-        #print "Agent " + self.agent_id.__str__() + " moved to " + self.cur_x_agent.__str__() + "," + self.cur_y_agent.__str__()
+        ##print "Agent " + self.agent_id.__str__() + " moved to " + self.cur_x_agent.__str__() + "," + self.cur_y_agent.__str__()
         x_cor = self.cur_x_agent * g_var.block_size
         y_cor = self.cur_y_agent * g_var.block_size
         self.canvas.create_polygon(x_cor+15,y_cor+20,x_cor+15,y_cor+35,x_cor+30,y_cor+35,x_cor+30,y_cor+20,fill=self.agent_color)

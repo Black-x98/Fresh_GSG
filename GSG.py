@@ -13,11 +13,13 @@ import random
 
 class app(Frame):
 
-    global  arrested_poachers, resource_poached, resource_recovered, distance_travelled, turn_gap_time
+    global arrested_poachers, resource_poached, resource_recovered, distance_travelled, turn_gap_time
+
 
     def refresh(self):
 
         self.label_arrest['text'] = "CAUGHT Poachers:\n" + str(g_var.arrested_poachers)
+        self.label_fled['text'] = "FLED Poachers:\n" + str(g_var.fled_poachers)
         self.label_sack['text'] = "Resource Poached:\n" + str(g_var.resource_poached)
         self.label_recovered['text'] = "Resource Recovered:\n" + str(g_var.resource_recovered)
         self.label_travelled['text'] = "Distance Travelled:\n" + str(g_var.distance_travelled)
@@ -27,9 +29,30 @@ class app(Frame):
                 res_label = Label(self.root,text = self.cell_resources[j][i],bg="black",fg="white")
                 res_label.place(x=i*g_var.block_size+2,y=j*g_var.block_size+2)
 
-        self.root.after(g_var.turn_gap_time, self.refresh)
+        self.refresh_counter += 1
 
-    def __init__(self):
+        if self.refresh_counter <= self.refresh_limit:
+            self.root.after(g_var.turn_gap_time, self.refresh)
+        elif self.refresh_counter > self.refresh_limit:
+            print "Caught poachers: " + str(g_var.arrested_poachers), \
+            ", Fled poachers: " + str(g_var.fled_poachers), \
+            ", Resource poached: " + str(g_var.resource_poached), \
+            ", Resource recovered: " + str(g_var.resource_recovered), \
+            ", Distance travelled by agents: " + str(g_var.distance_travelled)
+
+    def __init__(self, _num_adv, _num_agents, _num_drones):
+
+        g_var.num_of_adverseries = _num_adv
+        g_var.num_of_agents = _num_agents
+        g_var.num_of_drones = _num_drones
+
+        self.refresh_counter = 0
+        self.refresh_limit = 40
+
+        print "***Simulating Green Security Game***\n"
+        print "Parameters: adversaries: " + str(g_var.num_of_adverseries),\
+        ", agents: " + str(g_var.num_of_agents),\
+        ", drones: " + str(g_var.num_of_drones)
 
         self.root = Tk()
         self.root.title("Green Security Game")
@@ -63,18 +86,17 @@ class app(Frame):
                 if self.cell_resources[i][j] == -1:
                     self.round_marking.append((i,j))
         self.round_marking.append((5,5)) # temporary dummy
-        print "so, round marking is: "
-        print self.round_marking
-        print len(self.round_marking)
 
         self.cell_coord = [[i.__str__() + "," + j.__str__() for i in range(g_var.dimension)] for j in range(g_var.dimension)]
 
 
         self.label_poacher_num = Label(self.root,text = "Number of Total \nPoachers:\n" + str(g_var.num_of_adverseries))
-        self.label_poacher_num.place(relx=0.78, rely=0.15)
+        self.label_poacher_num.place(relx=0.78, rely=0.05)
 
         self.label_arrest = Label(self.root,text = g_var.arrested_poachers)
-        self.label_arrest.place(relx=0.78, rely=0.3)
+        self.label_arrest.place(relx=0.78, rely=0.2)
+        self.label_fled = Label(self.root,text = g_var.fled_poachers)
+        self.label_fled.place(relx=0.78, rely=0.3)
         self.label_sack = Label(self.root,text = g_var.resource_poached)
         self.label_sack.place(relx=0.78, rely=0.4)
         self.label_recovered = Label(self.root,text = g_var.resource_poached)
@@ -115,4 +137,6 @@ class app(Frame):
 
         self.root.mainloop()
 
-app()
+for i in range(3,7):
+    print "once in master loop"
+    app(10,i,(7-i)*3) # parameters: num of adversaries, agents, drones

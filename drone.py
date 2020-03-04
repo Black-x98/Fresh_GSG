@@ -52,7 +52,7 @@ class drone(entities):
         self.canvas.create_oval(x_cor+22,y_cor+10,x_cor+37,y_cor+25,fill=self.drone_color,outline=g_var.bg_color)
         if self.adv_pos[self.cur_y_drone][self.cur_x_drone] == 1:
             self.drone_signal[self.cur_y_drone][self.cur_x_drone] = 1
-            print "Drone sending signal!!! BEEP BEEP BEEP!! at " + self.cur_y_drone.__str__() + "," + self.cur_x_drone.__str__()
+            #print "Drone sending signal!!! BEEP BEEP BEEP!! at " + self.cur_y_drone.__str__() + "," + self.cur_x_drone.__str__()
 
         self.drone_counter += 1
 
