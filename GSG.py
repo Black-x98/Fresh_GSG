@@ -39,12 +39,20 @@ class app(Frame):
             ", Resource poached: " + str(g_var.resource_poached), \
             ", Resource recovered: " + str(g_var.resource_recovered), \
             ", Distance travelled by agents: " + str(g_var.distance_travelled)
+            self.root.destroy() # Destroys the Tkinter window for this execution
 
     def __init__(self, _num_adv, _num_agents, _num_drones):
 
         g_var.num_of_adverseries = _num_adv
         g_var.num_of_agents = _num_agents
         g_var.num_of_drones = _num_drones
+
+        # re-initialization of result variables
+
+        g_var.fled_poachers = 0
+        g_var.resource_poached = 0
+        g_var.resource_recovered = 0
+        g_var.distance_travelled = 0
 
         self.refresh_counter = 0
         self.refresh_limit = 40
@@ -137,6 +145,6 @@ class app(Frame):
 
         self.root.mainloop()
 
-for i in range(3,7):
+for i in range(1,7):
     print "once in master loop"
     app(10,i,(7-i)*3) # parameters: num of adversaries, agents, drones
