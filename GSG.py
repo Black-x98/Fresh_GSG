@@ -49,6 +49,7 @@ class app(Frame):
 
         # re-initialization of result variables
 
+        g_var.arrested_poachers = 0
         g_var.fled_poachers = 0
         g_var.resource_poached = 0
         g_var.resource_recovered = 0
@@ -57,7 +58,7 @@ class app(Frame):
         self.refresh_counter = 0
         self.refresh_limit = 40
 
-        print "***Simulating Green Security Game***\n"
+        print "\n***Simulating Green Security Game***\n"
         print "Parameters: adversaries: " + str(g_var.num_of_adverseries),\
         ", agents: " + str(g_var.num_of_agents),\
         ", drones: " + str(g_var.num_of_drones)
@@ -145,6 +146,5 @@ class app(Frame):
 
         self.root.mainloop()
 
-for i in range(1,7):
-    print "once in master loop"
-    app(10,i,(7-i)*3) # parameters: num of adversaries, agents, drones
+for i in range(1,8):
+    app(10,i,8) # parameters: num of adversaries, agents, drones
