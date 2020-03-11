@@ -70,10 +70,10 @@ class adv(entities):
         self.adv_pos[self.cur_y_adv][self.cur_x_adv] = 1
 
     def poach(self):
-        if self.drone_pos[self.cur_x_adv][self.cur_y_adv] == 1:
+        '''if self.drone_pos[self.cur_x_adv][self.cur_y_adv] == 1:
             #print "Poacher says: Oh no! Drone!!!"
             self.my_target = self.target_pos[random.randint(0,len(self.target_pos)-1)] # changing target to flee from drone
-            self.flag = 0
+            self.flag = 0'''
             
         if self.sack < self.sack_limit and self.cell_resources[self.cur_y_adv][self.cur_x_adv]>0:  # resource value update
             self.sack += 1
@@ -125,7 +125,6 @@ class adv(entities):
                 self.escape_y = g_var.dimension - 1
 
         self.flag = 3
-        ##print "Current pos: " + str(self.cur_y_adv) + "," + str(self.cur_x_adv) + " and Escape pos: " + str(self.escape_y) + "," + str(self.escape_x)
 
     def flee_adv(self):
         x_cor = self.cur_x_adv * g_var.block_size
@@ -188,7 +187,7 @@ class adv(entities):
             x_cor = self.cur_x_adv * g_var.block_size
             y_cor = self.cur_y_adv * g_var.block_size
             self.canvas.create_polygon(x_cor+15,y_cor+10,x_cor+15,y_cor+25,x_cor+30,y_cor+25,x_cor+30,y_cor+10,fill="white")
-            # actually j correspond to x and i correspoond to y
+            #actually j correspond to x and i correspoond to y
             #print "Poacher caught at the position: **" + self.cur_y_adv.__str__() + "," + self.cur_x_adv.__str__() + "**"
             self.canvas.create_polygon(x_cor+15,y_cor+38,x_cor+35,y_cor+38,x_cor+25,y_cor+19,fill=g_var.bg_color,outline=g_var.bg_color)
             global arrested_poachers, resource_recovered

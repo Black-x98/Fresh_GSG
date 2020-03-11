@@ -8,7 +8,6 @@ import g_var
 from Tkinter import *
 import random
 
-
 #**************************************************************************************************
 
 class app(Frame):
@@ -30,16 +29,18 @@ class app(Frame):
                 res_label.place(x=i*g_var.block_size+2,y=j*g_var.block_size+2)
 
         self.refresh_counter += 1
-
         if self.refresh_counter <= self.refresh_limit:
+            #print "working in main refresh " + random.randint(1,50).__str__()
             self.root.after(g_var.turn_gap_time, self.refresh)
         elif self.refresh_counter > self.refresh_limit:
             print "Caught poachers: " + str(g_var.arrested_poachers), \
             ", Fled poachers: " + str(g_var.fled_poachers), \
             ", Resource poached: " + str(g_var.resource_poached), \
             ", Resource recovered: " + str(g_var.resource_recovered), \
-            ", Distance travelled by agents: " + str(g_var.distance_travelled)
+            ", Distance travelled by agents: " + str(g_var.distance_travelled) + "\n"
+
             self.root.destroy() # Destroys the Tkinter window for this execution
+
 
     def __init__(self, _num_adv, _num_agents, _num_drones):
 
@@ -58,7 +59,6 @@ class app(Frame):
         self.refresh_counter = 0
         self.refresh_limit = 40
 
-        print "\n***Simulating Green Security Game***\n"
         print "Parameters: adversaries: " + str(g_var.num_of_adverseries),\
         ", agents: " + str(g_var.num_of_agents),\
         ", drones: " + str(g_var.num_of_drones)
@@ -146,5 +146,29 @@ class app(Frame):
 
         self.root.mainloop()
 
-for i in range(1,8):
-    app(10,i,8) # parameters: num of adversaries, agents, drones
+for i in range(5,9):
+    num_of_trials = 5
+    print "\n***Simulating Green Security Game***\n"
+    #res_list = [[None for ind in range(num_of_trials)] for ind2 in range(num_of_trials)]
+    avg_list = [0.0 for ind in range(num_of_trials)]
+    for j in range(num_of_trials):
+        app(10,i,8) # parameters: num of adversaries, agents, drones
+
+        avg_list[0] += g_var.arrested_poachers
+        avg_list[1] += g_var.fled_poachers
+        avg_list[2] += g_var.resource_poached
+        avg_list[3] += g_var.resource_recovered
+        avg_list[4] += g_var.distance_travelled
+
+    for j in range(num_of_trials):
+        avg_list[j] /= num_of_trials
+
+    print "\n******************** The average for trial " + str(g_var.num_of_adverseries) + "," + str(g_var.num_of_agents) + "," + str(g_var.num_of_drones) + " is: ********************\n"
+
+    print "Caught poachers: " + str(avg_list[0]), \
+            ", Fled poachers: " + str(avg_list[1]), \
+            ", Resource poached: " + str(avg_list[2]), \
+            ", Resource recovered: " + str(avg_list[3]), \
+            ", Distance travelled by agents: " + str(avg_list[4])
+
+    print "\n*********************"
