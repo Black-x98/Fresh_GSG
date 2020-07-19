@@ -1,2 +1,2 @@
 # Fresh_GSG
-GSG implementation
+Green Security Game implementation
